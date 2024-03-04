@@ -1,0 +1,1 @@
+Temperature of New York is: 8.2°C 
