@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 
 app.use(express.json());
+
 const port = 3100;
 let products = [
   { id: 1, name: "iPhone 12 Pro", price: 1099.99 },
@@ -10,19 +11,22 @@ let products = [
   { id: 4, name: "MacBook Pro 16", price: 2399.99 },
   { id: 5, name: "DJI Mavic Air 2", price: 799.99 },
 ];
-
+// return object json qui contient tout les products
 app.get("/products", (req, res) => {
   res.json(products);
 });
 
+
 app.get("/products/:id", (req, res) => {
   for (let product of products) {
-    if (product.id == req.params.id) {
+    if (product.id == req.params.id ) {
       return res.status(200).send(product);
     }
   }
   return res.status(404).send();
 });
+
+
 app.get("/products/search", (req, res) => {
   const { minPrice, maxPrice, q } = req.query;
   let filteredProducts = products;
@@ -43,6 +47,8 @@ app.get("/products/search", (req, res) => {
   }
   res.send(filteredProducts);
 });
+// fonction filter return un nouvaux tab , filter par une condition
+// ... signifiant remplacer les attribut de product dans les att de newproduct
 app.post("/products", (req, res) => {
   const product = req.body;
   const id = products.length + 1;
@@ -50,6 +56,9 @@ app.post("/products", (req, res) => {
   products.push(newProduct);
   res.status(201).json(newProduct);
 });
+
+
+
 app.put("/products/:id", (req, res) => {
   const { name, price } = req.body;
 
@@ -63,20 +72,26 @@ app.put("/products/:id", (req, res) => {
     }
     if (price) {
       products[index].price = parseFloat(price);
+      //parseFloat pour convertir chaine decar en float
     }
     res.status(200).send({ message: "Updated Successfully" });
   } else {
     res.status(400).send({ message: "Invalid Product ID" });
   }
 });
+
+
 app.delete("/products/:id", (req, res) => {
   const Index = products.findIndex((item) => item.id == req.params.id);
   console.log(Index);
   if (Index !== -1) {
     products.splice(Index, 1);
+    //supprimer apartir de index  et une seul fois.
     res.status(200).send({ message: "Deleted Succesfully" });
   } else {
     res.status(400).send({ message: "Invalid Product ID" });
   }
 });
+
+
 app.listen(port, () => console.log(`Server is running on port ${port}`));
